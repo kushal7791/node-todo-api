@@ -29,7 +29,7 @@ MongoClient.connect(url, {useNewUrlParser: true}, (err, client) => {//connecting
     // });
     
     db.collection('Users').find({
-        name: "Deepak S"
+        name: "Deepak Sh"
     }).toArray().then((docs) => {
         console.log("Users");
         console.log(JSON.stringify(docs, undefined, 2));
