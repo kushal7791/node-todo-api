@@ -1,24 +1,11 @@
-var mongoose = require('mongoose');
+//library imports
+var express = require('express');
+var bodyParser = require('body-parser');
 
-mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://localhost:27017/TodoSoft",{ useNewUrlParser: true });
-
-var Todo = mongoose.model("Todo", {
-    text: {
-        type: String,
-        required: true,
-        minlength: 1,
-        trim: true
-    },
-    completed: {
-        type: Boolean,
-        default: false//if not found make it false
-    },
-    completedAt: {
-        type: Number,
-        default: null
-    }
-});
+//local imports
+var {mongoose} = require('./db/mongoose');
+var {Todo} = require('./models/todo');
+var {User} = require('./models/user');
 
 // var newTodo = new Todo({
 //     text: "Cook Dinner"
@@ -46,21 +33,39 @@ var Todo = mongoose.model("Todo", {
 //     console.log("Unable to save todo.", err);
 // });
 
-var User = mongoose.model(("Users"), {
-    email: {
-        type: String,
-        required: true,
-        minlength: 1,
-        trim: true
-    }
+
+// var newUser = new User({
+//     email: "abc@gmail.com"
+// });
+
+// newUser.save().then((doc) => {
+//     console.log(JSON.stringify(doc, undefined, 2));
+// }, (err) => {
+//     console.log("Some error in saving", err);
+// });
+
+var app = express();
+
+app.use(bodyParser.json());
+
+app.post('/todos', (req, res) => {
+    //console.log(req.body);//this will take the data from the body and display in the cmd.
+    // var todo = new Todo({
+    //     text: req.body.text//this is the text property of the body that we'd enter on postman
+    // });
+    var todo = new Todo({
+        text: req.body.text,//this is the text property of the body that we'd enter on postman
+        completed: req.body.completed,//this is the completed property of the body that we'd enter on postman
+        completedAt: req.body.completedAt//this is the completedAt property of the body that we'd enter on postman
+    });
+
+    todo.save().then((doc) => {
+        res.status(200).send(`${doc}`);
+    }, (e) => {
+        res.status(400).send(e);
+    });
 });
 
-var newUser = new User({
-    email: "abc@gmail.com"
-});
-
-newUser.save().then((doc) => {
-    console.log(JSON.stringify(doc, undefined, 2));
-}, (err) => {
-    console.log("Some error in saving", err);
+app.listen(3000, () => {
+    console.log('Started on port 3000.');
 });
