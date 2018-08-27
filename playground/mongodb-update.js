@@ -10,26 +10,32 @@ MongoClient.connect(url, {useNewUrlParser: true}, (err, client) => {//connecting
     
     const db = client.db("TodoApp");//selecting db name from mongo connection
     
-    //deleteMany
-    // db.collection('Todos').deleteMany({text: "Eat Lunch"}).then((result) => {
-    //     console.log(result);
-    // });
-    
-    //deleteOne
-    // db.collection('Todos').deleteOne({text: "Eat Lunch"}).then((result) => {
-    //     console.log(result);
-    // });
-    
-    //find and delete
-    // db.collection('Todos').findOneAndDelete({completed: false}).then((result) => {
+    //find and delete with _id
+    // db.collection('Todos').findOneAndUpdate({
+    //     _id: new ObjectID("5b83a822a1a1a53112c09f7c")
+    // }, {
+    //     $set:{
+    //         completed: true
+    //     }
+    // }, {
+    //     returnOriginal: false
+    // }).then((result) => {
     //     console.log(result);
     // });
 
-    //find and delete with _id
-    db.collection('Users').findOneAndDelete({
-        _id: new ObjectID("5b7e47aa5b2ad336f0e5e0e0")
+    db.collection("Users").findOneAndUpdate({
+        _id: new ObjectID("5b7d5a24b2eb5b37dcc53fd1")
+    }, {
+        $set: {
+            name: "Kushal The Nigam"
+        },
+        $inc: {
+            age: 1
+        }
+    }, {
+        returnOriginal: false
     }).then((result) => {
-        console.log(result, undefined, 2);
+        console.log(result);
     });
     
     client.close();
